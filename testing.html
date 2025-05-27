@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spotify Token Demo</title>
+</head>
+
+<body>
+  <h1>Get Spotify Access Token & Artist Info</h1>
+  <button onclick="getTokenAndArtist()">Fetch Token & Artist Info</button>
+  <h2>Access Token:</h2>
+  <pre id="tokenOutput"></pre>
+  <h2>Artist Info:</h2>
+  <pre id="artistOutput"></pre>
+  <img id="artistImg"src="" alt="">
+
+  <script>
+    async function getTokenAndArtist() {
+      try {
+        // 1. Get access token from backend
+        const res = await fetch('http://localhost:3000/get-token');
+        const tokenData = await res.json();
+        document.getElementById('tokenOutput').textContent = JSON.stringify(tokenData, null, 2);
+
+        // 2. Use token to get artist info from Spotify API
+        const accessToken = tokenData.access_token;
+        const artistId = '0uDxCS9qmxWJTWCSLAK8Rr';
+
+        const artistRes = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+
+        if (!artistRes.ok) {
+          throw new Error(`Spotify API error: ${artistRes.status} ${artistRes.statusText}`);
+        }
+
+        const artistData = await artistRes.json();
+        document.getElementById('artistOutput').innerHTML = JSON.stringify(artistData, null, 2);//
+        document.getElementById('artistImg').src = artistData.images[0].url //JSON.stringify(artistData, null, 2);//
+
+      } catch (err) {
+        console.error('Error:', err);
+        document.getElementById('tokenOutput').textContent = 'Error fetching token or artist info';
+        document.getElementById('artistOutput').textContent = '';
+      }
+    }
+  </script>
+</body>
+</html>
