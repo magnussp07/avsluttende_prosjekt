@@ -1,0 +1,26 @@
+/* Minimal CSS Reset */
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+#songGrid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+#songGrid > img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    
+}
+
+

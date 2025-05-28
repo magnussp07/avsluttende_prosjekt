@@ -4,32 +4,28 @@
         <meta charset="utf-8">
         <title>My Spotify Profile</title>
         <script src="src/script.js" type="module"></script>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>Display your Spotify profile data</h1>
+        
 
-        <a href="http://127.0.0.1:5173/" target="_blank">Last inn siden på nytt</a>
+        <button onclick="window.location.href='http://127.0.0.1:5173/'">Logg inn</button>
+        
 
-        <section id="profile">
-        <h2>Logged in as <span id="displayName"></span></h2>
-        <span id="avatar"></span>
+        <select id="velg_tidsramme">
+            <option value="short_term" selected>Den siste måneden</option>
+            <option value="medium_term">Det siste halvåret</option>
+            <option value="long_term">De siste årene</option>
+        </select>
+        
+        
         <ul>
-            <li>User ID: <span id="id"></span></li>
-            <li>Email: <span id="email"></span></li>
-            <li>Spotify URI: <a id="uri" href="#"></a></li>
-            <li>Link: <a id="url" href="#"></a></li>
-            <li>Profile Image: <span id="imgUrl"></span></li>
-            <br>
-            <br>
+            
             <li>Mest avspilte: <span id="songs"></span></li>
-            <li id="songs1"></li>
-            <img id="mestAlbum1" alt="Top Song Album 1" />
-            <li id="songs2"></li>
-            <img id="mestAlbum2" alt="Top Song Album 2" />
-            <li id="songs3"></li>
-            <img id="mestAlbum3" alt="Top Song Album 3" />
-            <li id="songs4"></li>
-            <img id="mestAlbum4" alt="Top Song Album 4" />
+
+            <div id="songGrid">
+              
+            </div>
 
             
 

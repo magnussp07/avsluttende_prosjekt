@@ -4,8 +4,6 @@ const clientId = "c14eecb38eba4ff9a8f09782c98543dc"; // Replace with your client
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-const timeframe = document.getElementById("velg_tidsramme").value;
-
 if (!code) {
     console.log("🚀 Redirecting to Spotify login...");
     redirectToAuthCodeFlow(clientId);
@@ -94,7 +92,7 @@ async function fetchProfile(token) {
 }
 
 async function fetchTopTracks(accessToken) {
-  const result = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=" + timeframe, {
+  const result = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=medium_term", {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
@@ -109,6 +107,20 @@ async function fetchTopTracks(accessToken) {
 
 
 function populateUI(profile, topsongs) {
+    document.getElementById("displayName").innerText = profile.display_name;
+    if (profile.images[0]) {
+        const profileImage = new Image(200, 200);
+        profileImage.src = profile.images[0].url;
+        document.getElementById("avatar").appendChild(profileImage);
+        document.getElementById("imgUrl").innerText = profile.images[0].url;
+    }
+    document.getElementById("id").innerText = profile.id;
+    document.getElementById("email").innerText = profile.email;
+    document.getElementById("uri").innerText = profile.uri;
+    document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
+    document.getElementById("url").innerText = profile.href;
+    document.getElementById("url").setAttribute("href", profile.href);
+    
     
 
     for (let i = 0; i < 10; i++) {
