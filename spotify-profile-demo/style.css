@@ -1,26 +1,172 @@
-/* Minimal CSS Reset */
+@import url('https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+    --fyll:#900414;
+    --kant:#c07c54;
+}
+
+
+
+::-webkit-scrollbar { /* funker ikke i firefox/edge */
+  width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+  
+}
+
+::-webkit-scrollbar-thumb {
+  
+  border: 2px solid var(--fyll)
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c07c54;
+  
+}
+
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    width: 100%;
     box-sizing: border-box;
 }
 *, *::before, *::after {
     box-sizing: inherit;
-}
-
-#songGrid{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 20px;
-    padding: 20px;
-}
-
-#songGrid > img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
     
 }
 
+body{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 33% 17% 50%;
+    grid-template-rows:  15% 5% 25% 5% 25% 5% 20%;
+    background-color: #340068;
+}
+
+
+header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--fyll);
+    border: solid 5px var(--kant);
+    grid-column: 1/4;
+    grid-row: 1/2;
+
+}
+
+h1{
+    font-family: "Arvo", serif;
+    font-weight: 700;
+    
+    color: var(--kant);
+    font-size: 100px;
+}
+
+#login{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+#platespiller{
+    grid-row: 3/6;
+    grid-column: 1/2;
+    background-color: var(--fyll);
+    border: solid 5px var(--kant);
+}
+
+#kontroll{
+    grid-row: 7/8;
+    grid-column: 1/2;
+    background-color: var(--fyll);
+    border: solid 5px var(--kant);
+}
+/* 
+.bokHylle{
+    position: fixed;
+    height: 30vh;
+    width: 60vw;
+    background-color: var(--fyll);
+    border: solid 5px var(--kant);
+    overflow-x: hidden;
+    align-items: center;
+    right:0;
+    padding: 0;
+    z-index: 0;
+}
+*/
+#hylle1{
+    position: relative;
+    
+    grid-row: 3/4;
+    
+    grid-column: 3/4;
+
+    background-color: var(--fyll);
+    border: solid 5px var(--kant);
+
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+
+#hylle2{
+    grid-row: 5/6;
+    grid-column: 3/4;
+
+    background-color: var(--fyll);
+    border: solid 5px var(--kant);
+}
+
+
+
+.songBox {
+    position: absolute;
+    top: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s;
+    z-index: 1;
+    
+}
+
+.songBox:hover {
+    transform: rotate(-5deg) translateY(-20px);
+    z-index: 10;
+}
+
+.songBox img {
+    height: 80%;
+    width: auto;
+    object-fit: contain;
+    z-index: 2;
+}
+
+.songBox p {
+    margin: 0;
+    position: absolute;
+    width: 80%;
+    /* transform: rotate(-90deg);  */
+    transform-origin: left;
+    font-size: 0.9rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 6px;
+    text-align: center;
+    bottom: 20%;
+    z-index: 2;
+   
+}
+
+
+.songBox :first-child{
+    left: 10px;
+}
 

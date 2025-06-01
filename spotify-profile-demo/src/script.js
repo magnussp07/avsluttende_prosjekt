@@ -4,7 +4,20 @@ const clientId = "c14eecb38eba4ff9a8f09782c98543dc"; // Replace with your client
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
-const timeframe = document.getElementById("velg_tidsramme").value;
+/* function allowDrop(even) {
+    even.preventDefault();
+}
+
+function drag(even) {
+    even.dataTransfer.setData("text", even.target.id);
+}
+
+function drop(even) {
+    even.preventDefault();
+    var fetchData = even.dataTransfer.getData("text");
+    even.target.appendChild(document.getElementById(fetchData));
+}
+ */
 
 if (!code) {
     console.log("🚀 Redirecting to Spotify login...");
@@ -94,7 +107,7 @@ async function fetchProfile(token) {
 }
 
 async function fetchTopTracks(accessToken) {
-  const result = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=10&time_range=" + timeframe, {
+  const result = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=short_term&offset=0", {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
@@ -111,13 +124,23 @@ async function fetchTopTracks(accessToken) {
 function populateUI(profile, topsongs) {
     
 
-    for (let i = 0; i < 10; i++) {
-        //const newsong = document.createElement("h3");
+    for (let i = 0; i < 15; i++) {
+        const box = document.createElement("div");
+        box.className = "songBox";
+        box.id = `songBox${i}`;
         const newImg = document.createElement("img");
+        const newsong = document.createElement("p");
+        
         newImg.src = topsongs[i].album.images[0].url;
-        //newsong.innerText = topsongs[i].name;
-        //document.getElementById("songGrid").appendChild(newsong);
-        document.getElementById("songGrid").appendChild(newImg);
+        newsong.innerText = topsongs[i].name;
+        document.getElementById("hylle1").appendChild(box);
+        
+        document.getElementById(`songBox${i}`).style.left =  i * 55 + 15 + "px";
+        
+        
+        document.getElementById(`songBox${i}`).appendChild(newImg);
+        document.getElementById(`songBox${i}`).appendChild(newsong);
+        
         
     }
 

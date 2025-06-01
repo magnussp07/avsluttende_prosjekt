@@ -3,34 +3,42 @@
     <head>
         <meta charset="utf-8">
         <title>My Spotify Profile</title>
-        <script src="src/script.js" type="module"></script>
+        
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
         
 
-        <button onclick="window.location.href='http://127.0.0.1:5173/'">Logg inn</button>
-        
+      
 
-        <select id="velg_tidsramme">
-            <option value="short_term" selected>Den siste måneden</option>
-            <option value="medium_term">Det siste halvåret</option>
-            <option value="long_term">De siste årene</option>
-        </select>
-        
-        
-        <ul>
+
+      
+      <header>
+        <button id="login" onclick="window.location.href='http://127.0.0.1:5173/'">Logg inn</button>
+        <h1>PLATESPILLER</h1>
+      </header>
+      
+
+      
+      <div id="platespiller"></div>
+
+      <div id="kontroll"></div>
+
+      
+
+        <div id="hylle1" class="bokHylle"></div>
+        <div id="hylle2" class="bokHylle"></div>
+
+      
+
+      
+
+
             
-            <li>Mest avspilte: <span id="songs"></span></li>
+        
 
-            <div id="songGrid">
-              
-            </div>
-
-            
-
-        </ul>
-        </section>
+        <script src="src/script.js" type="module"></script>
+       
 
     </body>
 </html>
