@@ -45,7 +45,7 @@ body{
     display: grid;
     grid-template-columns: 33% 17% 50%;
     grid-template-rows:  15% 5% 25% 5% 25% 5% 20%;
-    background-color: #340068;
+    background-color: white;
 }
 
 
@@ -57,7 +57,6 @@ header{
     border: solid 5px var(--kant);
     grid-column: 1/4;
     grid-row: 1/2;
-
 }
 
 h1{
@@ -116,12 +115,20 @@ h1{
 }
 
 #hylle2{
+    position: relative;
+
+
     grid-row: 5/6;
     grid-column: 3/4;
 
     background-color: var(--fyll);
     border: solid 5px var(--kant);
+
+    overflow-x: scroll;
+    overflow-y: hidden;
+    
 }
+
 
 
 
@@ -133,12 +140,12 @@ h1{
     flex-direction: column;
     align-items: center;
     transition: transform 0.3s;
-    z-index: 1;
+    z-index: 5;
     
 }
 
 .songBox:hover {
-    transform: rotate(-5deg) translateY(-20px);
+    transform:  translateY(-20px);
     z-index: 10;
 }
 

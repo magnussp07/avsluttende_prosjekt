@@ -4,6 +4,8 @@ const clientId = "c14eecb38eba4ff9a8f09782c98543dc"; // Replace with your client
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
+const antall = 40
+
 /* function allowDrop(even) {
     even.preventDefault();
 }
@@ -27,8 +29,16 @@ if (!code) {
     const accessToken = await getAccessToken(clientId, code);
     const profile = await fetchProfile(accessToken);
     const topsongs = await fetchTopTracks(accessToken)
+    const playlists = await fetchPlaylist(accessToken, profile.id)
+    const liked = await fetchLiked(accessToken)
+    console.log(profile)
     console.log(topsongs)
-    populateUI(profile, topsongs);
+    //console.log(playlists)
+    console.log(liked)
+    
+   
+
+    populateUI(profile, topsongs, liked)
 }
 
 
@@ -43,7 +53,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://127.0.0.1:5173/");
-    params.append("scope", "user-read-private user-read-email user-top-read");
+    params.append("scope", "user-read-private user-read-email user-top-read user-library-read playlist-read-private");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -81,6 +91,7 @@ export async function getAccessToken(clientId, code) {
     params.append("code", code);
     params.append("redirect_uri", "http://127.0.0.1:5173/");
     params.append("code_verifier", verifier);
+    
 
     console.log("📦 Token Request Params:", params.toString());
 
@@ -106,8 +117,33 @@ async function fetchProfile(token) {
     return await result.json();
 }
 
+async function fetchPlaylist(accessToken, id){
+    const result = await fetch(`https://api.spotify.com/v1/users/${id}/playlists`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    })
+
+    const data = await result.json();
+    return data.items; 
+}
+
+async function fetchLiked(accessToken){
+    const result = await fetch(`https://api.spotify.com/v1/me/tracks?market=NO&limit=${antall}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    })
+
+    return await result.json()
+
+
+}
+
+
+
 async function fetchTopTracks(accessToken) {
-  const result = await fetch("https://api.spotify.com/v1/me/top/tracks?limit=20&time_range=short_term&offset=0", {
+  const result = await fetch(`https://api.spotify.com/v1/me/top/tracks?limit=${antall}&time_range=short_term&offset=0`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
@@ -121,25 +157,34 @@ async function fetchTopTracks(accessToken) {
   return data.items; }
 
 
-function populateUI(profile, topsongs) {
+function populateUI(profile, topsongs, liked) {
     
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < antall*2; i++) {
         const box = document.createElement("div");
         box.className = "songBox";
         box.id = `songBox${i}`;
         const newImg = document.createElement("img");
         const newsong = document.createElement("p");
         
-        newImg.src = topsongs[i].album.images[0].url;
-        newsong.innerText = topsongs[i].name;
-        document.getElementById("hylle1").appendChild(box);
+        if (i < antall){
+            newImg.src = topsongs[i].album.images[0].url;
+            newsong.innerText = topsongs[i].name;
+            document.getElementById("hylle1").appendChild(box);
+            box.style.left =  i * 55 + 15 + "px"
+        }else{
+            newImg.src = liked.items[i-antall].track.album.images[0].url;
+            newsong.innerText = liked.items[i-antall].track.name;
+            document.getElementById("hylle2").appendChild(box);
+            box.style.left =  (i-antall) * 55 + 15 + "px"
+        }
         
-        document.getElementById(`songBox${i}`).style.left =  i * 55 + 15 + "px";
         
         
-        document.getElementById(`songBox${i}`).appendChild(newImg);
-        document.getElementById(`songBox${i}`).appendChild(newsong);
+        
+        
+        box.appendChild(newImg)
+        box.appendChild(newsong)
         
         
     }
