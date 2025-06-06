@@ -4,6 +4,10 @@ const clientId = "c14eecb38eba4ff9a8f09782c98543dc"; // Replace with your client
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
+let player;
+let deviceId;
+let accessToken
+
 const antall = 40
 
 /* function allowDrop(even) {
@@ -26,7 +30,7 @@ if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     console.log("✅ Got code, getting token...");
-    const accessToken = await getAccessToken(clientId, code);
+    accessToken = await getAccessToken(clientId, code)
     const profile = await fetchProfile(accessToken);
     const topsongs = await fetchTopTracks(accessToken)
     const playlists = await fetchPlaylist(accessToken, profile.id)
@@ -35,11 +39,56 @@ if (!code) {
     console.log(topsongs)
     //console.log(playlists)
     console.log(liked)
-    
-   
 
+    
     populateUI(profile, topsongs, liked)
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+    player = new Spotify.Player({
+      name: 'My Spotify Web Player',
+      getOAuthToken: cb => { cb(accessToken); },
+      volume: 0.5
+    });
+
+    // Ready
+    player.addListener('ready', ({ device_id }) => {
+      console.log('Ready with Device ID', device_id);
+      deviceId = device_id;
+    });
+
+    // Not Ready
+    player.addListener('not_ready', ({ device_id }) => {
+      console.log('Device ID has gone offline', device_id);
+    });
+
+    player.connect();
+
+    document.getElementById('pause').onclick = function() {
+        player.togglePlay();
+    };
+  };
+
+    const script = document.createElement('script');
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    document.head.appendChild(script);
 }
+
+// Function to play a track on the player device
+async function playTrack(trackUri) {
+  if (!deviceId) {
+    console.log("Device ID not ready yet");
+    return;
+  }
+  await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ uris: [trackUri] }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`
+    },
+  });
+}
+
 
 
 
@@ -53,7 +102,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://127.0.0.1:5173/");
-    params.append("scope", "user-read-private user-read-email user-top-read user-library-read playlist-read-private");
+    params.append("scope", "user-read-private user-read-email user-top-read user-library-read playlist-read-private streaming user-modify-playback-state");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -172,11 +221,19 @@ function populateUI(profile, topsongs, liked) {
             newsong.innerText = topsongs[i].name;
             document.getElementById("hylle1").appendChild(box);
             box.style.left =  i * 55 + 15 + "px"
+
+            box.addEventListener('click', () => {
+            playTrack(topsongs[i].uri);
+            })
         }else{
             newImg.src = liked.items[i-antall].track.album.images[0].url;
             newsong.innerText = liked.items[i-antall].track.name;
             document.getElementById("hylle2").appendChild(box);
             box.style.left =  (i-antall) * 55 + 15 + "px"
+
+            box.addEventListener('click', () => {
+            playTrack(liked.items[i-antall].track.uri);
+            })
         }
         
         
@@ -185,6 +242,9 @@ function populateUI(profile, topsongs, liked) {
         
         box.appendChild(newImg)
         box.appendChild(newsong)
+
+
+        
         
         
     }
